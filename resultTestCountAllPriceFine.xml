@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Fines>
+  <fine fine_name="drivingOnRed" count="5760.0" />
+  <fine fine_name="safetyBelt" count="960.0" />
+  <fine fine_name="speeding" count="880.0" />
+</Fines>
