@@ -19,7 +19,7 @@ import javax.xml.stream.events.XMLEvent;
 
 public class FirstTest {
 
-    public void refactorNameXml(String fileName) {
+    public static void refactorNameXml(String fileName) {
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
             XMLEventReader reader =
@@ -63,13 +63,11 @@ public class FirstTest {
         }
     }
 
-        public void refactorNameAndSaveFormatXml(String fileName) {
+        public static void refactorNameAndSaveFormatXml(String fileName) {
         FileInputStream inputStream = null;
-        FileOutputStream fileOutputStream = null;
         Scanner sc = null;
-        try {
+        try (FileOutputStream fileOutputStream = new FileOutputStream("resultRefactorNameAndSaveFormat.xml")){
             inputStream = new FileInputStream(fileName);
-            fileOutputStream = new FileOutputStream("resultRefactorNameAndSaveFormat.xml");
             sc = new Scanner(inputStream, "UTF-8");
             String result = null;
             boolean personStart = false;
@@ -96,38 +94,21 @@ public class FirstTest {
                     }
                 }
                 if (!personStart) {
-
                     assert result != null;
                     byte[] bytes = result.getBytes();
                     fileOutputStream.write(bytes);
                     result = "";
                 }
             }
-            if (sc.ioException() != null) {
-                throw sc.ioException();
-            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    assert fileOutputStream != null;
-                    fileOutputStream.close();
-                    inputStream.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (sc != null) {
-                sc.close();
-            }
+            throw new RuntimeException("Can`t write file ", e);
         }
     }
 
     private static String getSurnameString(String result, String target) {
-        int surname = result.indexOf(target);
-        if (surname >= 0) {
-            int indexSurnameStart = result.indexOf("\"", surname) + 1;
+        int indexOfTargetString = result.indexOf(target);
+        if (indexOfTargetString >= 0) {
+            int indexSurnameStart = result.indexOf("\"", indexOfTargetString) + 1;
             String substring = result.substring(indexSurnameStart,
                     result.indexOf("\"", indexSurnameStart));
             return substring;

@@ -21,7 +21,10 @@ import org.json.simple.parser.ParseException;
 
 
 public class SecondTest {
-    public void calculate(String fileName) {
+    private static final String SAFETYBELT = "safetyBelt";
+    private static final String SPEEDING = "speeding";
+    private static final String DRIVINGONRED = "drivingOnRed";
+    public static void calculate(String fileName) {
         Double safetyBelt = 0.0;
         Double speeding = 0.0;
         Double drivingOnRed = 0.0;
@@ -46,21 +49,20 @@ public class SecondTest {
                         case ("SPEEDING"):
                             speeding += price;
                             break;
-                        default:
+                        case ("DRIVINGONRED"):
                             drivingOnRed += price;
+                        default:
                             break;
                     }
                 }
             }
             HashMap<String, Double> fines = new HashMap<>();
-            fines.put("safetyBelt", safetyBelt);
-            fines.put("speeding", speeding);
-            fines.put("drivingOnRed", drivingOnRed);
+            fines.put(SAFETYBELT, safetyBelt);
+            fines.put(SPEEDING, speeding);
+            fines.put(DRIVINGONRED, drivingOnRed);
             writeToXML(fines, "resultTestCountAllPriceFine.xml");
         } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("You have empty file", e);
+            throw new RuntimeException("Can`t write file ", e);
         }
     }
 
@@ -70,7 +72,6 @@ public class SecondTest {
         doc.setRootElement(new Element("Fines"));
         List<Element> collect = fines.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).map(it -> {
-
                     Element fineElement = new Element("fine");
                     fineElement.setAttribute("fine_name", it.getKey());
                     fineElement.setAttribute("count", it.getValue().toString());
